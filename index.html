@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#140d26">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Тридцать окошек">
-<meta property="og:description" content="Интерактивная открытка на 30-летие: тридцать окошек с пожеланиями.">
+<meta property="og:title" content="Тридцать одно окошко">
+<meta property="og:description" content="Интерактивная открытка на 31-й день рождения: тридцать одно окошко с пожеланиями.">
 <meta property="og:image" content="preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <style>
@@ -15,13 +15,13 @@ body{margin:0;font-family:system-ui,sans-serif;font-size:14px;background:#fafafa
 img{max-width:100%}
 [hidden]{display:none!important}
 </style>
-<title>Тридцать окошек</title>
+<title>Тридцать одно окошко</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600&display=swap">
 
 <style>
-/* Ночная гирлянда: тёплый заголовок, сетка из 30 блоков-окошек, пожелание раскрывается поверх страницы */
+/* Ночная гирлянда: тёплый заголовок, сетка из 31 блока-окошка, пожелание раскрывается поверх страницы */
 :root{
   --ink:#140d26;          /* глубокая слива — ночь */
   --ink-2:#1d1434;
@@ -240,7 +240,7 @@ footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
 <div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Открыть открытку">
   <div id="introSound">
     <p class="eyebrow">4 октября · день рождения</p>
-    <span class="age">30</span>
+    <span class="age">31</span>
     <button class="intro-btn" id="introBtn" type="button">
       <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
       Открыть
@@ -266,10 +266,10 @@ footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
   <header class="hero">
     <p class="eyebrow">4 октября · день рождения</p>
     <h1 id="title">С днём рождения!</h1>
-    <span class="age">30</span>
-    <p class="lede">Тридцать окошек — по одному на каждый год. Открывай по порядку или тыкай куда захочется: внутри то, что хочется сказать вслух.</p>
+    <span class="age">31</span>
+    <p class="lede">Тридцать одно окошко — по одному на каждый год. Открывай по порядку или тыкай куда захочется: внутри то, что хочется сказать вслух.</p>
     <div class="status">
-      <span class="count"><span id="done">0</span> из 30</span>
+      <span class="count"><span id="done">0</span> из 31</span>
       <span class="bar"><i id="barFill"></i></span>
     </div>
   </header>
@@ -279,8 +279,8 @@ footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
     <p class="hint"><button class="linkish" id="openAll" type="button" hidden>открыть все сразу</button></p>
     <section class="finale" id="finale" hidden>
       <img id="finaleImg" src="s/ruffle.png" alt="">
-      <h2 id="finaleTitle">Все тридцать открыты</h2>
-      <p id="finaleText">Тридцать — хороший возраст: уже знаешь, чего не хочешь, и ещё успеваешь всё, чего хочешь. Пусть этот год будет твоим: спокойным там, где нужен покой, и громким там, где хочется громко. С днём рождения.</p>
+      <h2 id="finaleTitle">Все тридцать одно открыты</h2>
+      <p id="finaleText">Тридцать один — хороший возраст: уже знаешь, чего не хочешь, и ещё успеваешь всё, чего хочешь. Пусть этот год будет твоим: спокойным там, где нужен покой, и громким там, где хочется громко. С днём рождения.</p>
     </section>
   </main>
 
@@ -304,9 +304,9 @@ footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
 var NAME = "";
 
 var WISHES = [
-  {t:"С тридцатилетием. Сегодня весь день про тебя — и это честно заслужено."},
+  {t:"С днём рождения! Сегодня весь день про тебя — и это честно заслужено."},
   {t:"Пусть этот год будет щедрым на людей, рядом с которыми не нужно притворяться."},
-  {t:"Тридцать — это возраст, когда уже точно знаешь, что тебе идёт. И носишь это, не спрашивая разрешения."},
+  {t:"Тридцать один — это возраст, когда уже точно знаешь, что тебе идёт. И носишь это, не спрашивая разрешения."},
   {t:"Желаю утр, в которые никуда не надо спешить."},
   {t:"Этот маленький отряд поздравляет тебя первым.", img:"s/plush.png", alt:"Minecraft-персонаж с плюшевой игрушкой"},
   {t:"Пусть сбудется то, о чём ты никому не рассказывала."},
@@ -316,7 +316,7 @@ var WISHES = [
   {t:"Коты тоже в курсе, что у тебя праздник. Просто не подают виду.", img:"s/cats.png", alt:"Два кота в пиксельном стиле"},
   {t:"Пусть рядом будут те, кому можно написать в три часа ночи."},
   {t:"Желаю поездки, после которой фотографии не передают и половины."},
-  {t:"Тридцать лет — это тридцать лет опыта. Серьёзная заявка."},
+  {t:"Тридцать один год — это тридцать один год опыта. Серьёзная заявка."},
   {t:"Пусть тело слушается, а спина не напоминает о себе."},
   {t:"Желаю много таких вечеров: тепло, тихо и никуда не надо.", img:"s/pajamas.png", alt:"Minecraft-персонаж в розовой пижаме"},
   {t:"Пусть будет время на ерунду. На самую приятную ерунду."},
@@ -331,12 +331,14 @@ var WISHES = [
   {t:"Желаю смеяться так, чтобы потом болели щёки."},
   {t:"Пусть всё, что должно случиться, случится вовремя."},
   {t:"Уверенность тебе к лицу.", img:"s/black.png", alt:"Minecraft-персонаж в чёрном"},
-  {t:"Желаю, чтобы тридцать первый оказался ещё лучше тридцатого."},
+  {t:"Желаю, чтобы тридцать второй оказался ещё лучше тридцать первого."},
   {t:"Спасибо, что ты есть. Без шуток и без повода."},
+  {t:"Тридцать один — красивое число: вроде уже не новичок, а всё самое интересное только начинается."},
   {t:"Последнее окошко. Пусть этот год будет твоим — целиком и полностью. С днём рождения.", img:"s/couple2.png", alt:"Два Minecraft-персонажа рядом"}
 ];
 
-var KEY = "bday30.opened.v1";
+var KEY = "bday31.opened.v1";
+var N = WISHES.length;
 var opened = new Set();
 try{ var saved = localStorage.getItem(KEY); if(saved) JSON.parse(saved).forEach(function(i){opened.add(i)}); }catch(e){}
 
@@ -361,7 +363,7 @@ var HEART = '<svg class="heart" viewBox="0 0 11 10" aria-hidden="true" fill="#ff
   '<rect x="0" y="2" width="11" height="2"/><rect x="1" y="4" width="9" height="1"/><rect x="2" y="5" width="7" height="1"/>'+
   '<rect x="3" y="6" width="5" height="1"/><rect x="4" y="7" width="3" height="1"/><rect x="5" y="8" width="1" height="1"/></svg>';
 
-for(var i=0;i<30;i++){
+for(var i=0;i<N;i++){
   var li = document.createElement("li");
   var b = document.createElement("button");
   b.type = "button";
@@ -390,7 +392,7 @@ function openWish(idx, srcEl){
   current = idx;
   lastFocus = srcEl || lastFocus;
   var w = WISHES[idx];
-  sheetNum.textContent = "Окошко " + (idx+1) + " из 30";
+  sheetNum.textContent = "Окошко " + (idx+1) + " из " + N;
   sheetWish.textContent = w.t;
   if(w.img){ sheetImg.src = w.img; sheetImg.alt = w.alt || ""; sheetImg.hidden = false; }
   else { sheetImg.hidden = true; sheetImg.removeAttribute("src"); }
@@ -410,8 +412,8 @@ function markOpen(idx){
 }
 
 function findNext(){
-  for(var k=1;k<=30;k++){
-    var j = (current + k) % 30;
+  for(var k=1;k<=N;k++){
+    var j = (current + k) % N;
     if(!opened.has(j)) return j;
   }
   return -1;
@@ -422,9 +424,9 @@ function save(){ try{ localStorage.setItem(KEY, JSON.stringify(Array.from(opened
 function refresh(){
   var n = opened.size;
   doneEl.textContent = n;
-  barFill.style.width = (n/30*100) + "%";
-  openAllBtn.hidden = n < 4 || n === 30;
-  if(n === 30 && finale.hidden){
+  barFill.style.width = (n/N*100) + "%";
+  openAllBtn.hidden = n < 4 || n === N;
+  if(n === N && finale.hidden){
     finale.hidden = false;
     rain();
   }
