@@ -168,6 +168,32 @@ footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
 .btn:active{transform:translateY(2px);box-shadow:0 1px 0 #c98040}
 .btn:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
 
+/* ——— заставка: тап включает звук и открывает открытку ——— */
+.intro{
+  position:fixed;inset:0;z-index:70;display:grid;place-items:center;text-align:center;
+  padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));
+  background:
+    radial-gradient(60rem 40rem at 50% -10rem, #4a2a63 0%, rgba(74,42,99,0) 65%),
+    var(--ink);
+  transition:opacity .5s ease, visibility .5s ease
+}
+.intro.gone{opacity:0;visibility:hidden}
+.intro .age{margin-bottom:22px}
+.intro .eyebrow{margin-bottom:6px}
+.intro-btn{
+  font-family:var(--display);font-weight:800;font-size:1.15rem;cursor:pointer;
+  display:inline-flex;align-items:center;gap:12px;
+  padding:18px 34px;border-radius:99px;border:0;color:#2b0f1f;
+  background:linear-gradient(180deg,#ffd3a6,var(--peach));
+  box-shadow:0 6px 0 #c98040,0 18px 40px rgba(255,182,115,.35);
+  animation:pulse 1.8s ease-in-out infinite
+}
+.intro-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c98040}
+.intro-btn:focus-visible{outline:3px solid var(--mint);outline-offset:4px}
+.intro-btn svg{width:24px;height:24px;flex:none}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.intro-note{margin:20px auto 0;max-width:20rem;color:var(--muted);font-size:.92rem}
+
 /* ——— музыка ——— */
 .music{
   position:fixed;z-index:55;right:14px;top:calc(14px + env(safe-area-inset-top,0px));
@@ -194,6 +220,18 @@ footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
 </head>
 <body>
 <canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Открыть открытку">
+  <div>
+    <p class="eyebrow">3 октября · день рождения</p>
+    <span class="age">30</span>
+    <button class="intro-btn" id="introBtn" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+      Открыть
+    </button>
+    <p class="intro-note">Включится музыка — сделай погромче 🔊</p>
+  </div>
+</div>
 
 <button class="music" id="music" type="button" aria-pressed="false">
   <span class="eq" aria-hidden="true"><b></b><b></b><b></b></span><span id="musicLabel">Музыка</span>
@@ -438,12 +476,11 @@ function tick(){
   else { raf = null; ctx.clearRect(0,0,innerWidth,innerHeight); }
 }
 
-/* ——— музыка: фоновый трек, стартует с первого касания страницы ——— */
+/* ——— музыка: фоновый трек, стартует с заставки ——— */
 var musicBtn = document.getElementById("music");
 var musicLabel = document.getElementById("musicLabel");
 var track = new Audio("music.mp3");
-track.loop = true; track.preload = "auto"; track.volume = .75;
-var userStopped = false;
+track.loop = true; track.preload = "auto"; track.volume = 1;
 
 function playing(on){
   musicBtn.classList.toggle("on", on);
@@ -458,18 +495,18 @@ track.addEventListener("playing", function(){ playing(true); });
 track.addEventListener("pause", function(){ playing(false); });
 
 musicBtn.addEventListener("click", function(){
-  if(track.paused){ userStopped = false; startTrack(); }
-  else { userStopped = true; track.pause(); }
+  if(track.paused) startTrack();
+  else track.pause();
 });
-function firstTouch(e){
-  document.removeEventListener("pointerdown", firstTouch, true);
-  document.removeEventListener("keydown", firstTouch, true);
-  if(e.target.closest && e.target.closest("#music")) return;
-  if(!userStopped && track.paused) startTrack();
-}
-document.addEventListener("pointerdown", firstTouch, true);
-document.addEventListener("keydown", firstTouch, true);
-startTrack();
+/* тап по заставке — то самое действие пользователя, после которого браузер разрешает звук */
+var intro = document.getElementById("intro");
+document.getElementById("introBtn").addEventListener("click", function(){
+  try{ if(navigator.audioSession) navigator.audioSession.type = "playback"; }catch(e){}
+  track.volume = 1;
+  startTrack();
+  intro.classList.add("gone");
+  document.getElementById("title").scrollIntoView({block:"start"});
+});
 
 /* восстановление прогресса */
 opened.forEach(function(i){
