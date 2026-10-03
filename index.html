@@ -505,7 +505,7 @@ document.getElementById("introBtn").addEventListener("click", function(){
   track.volume = 1;
   startTrack();
   intro.classList.add("gone");
-  document.getElementById("title").scrollIntoView({block:"start"});
+  window.scrollTo(0, 0);
 });
 
 /* восстановление прогресса */
