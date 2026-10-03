@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#140d26">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Тридцать окошек">
+<meta property="og:description" content="Интерактивная открытка на 30-летие: тридцать окошек с пожеланиями.">
+<meta property="og:image" content="preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-family:system-ui,sans-serif;font-size:14px;background:#fafafa}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Тридцать окошек</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600&display=swap">
+
+<style>
+/* Ночная гирлянда: тёплый заголовок, сетка из 30 блоков-окошек, пожелание раскрывается поверх страницы */
+:root{
+  --ink:#140d26;          /* глубокая слива — ночь */
+  --ink-2:#1d1434;
+  --block:#2e2152;        /* грань блока */
+  --block-top:#3d2d6b;
+  --cream:#fff4e8;
+  --muted:#b5a3d8;
+  --pink:#ff6fae;
+  --peach:#ffb673;
+  --mint:#86e7c6;
+  --line:rgba(255,255,255,.12);
+  --display:"Unbounded","Trebuchet MS",system-ui,sans-serif;
+  --body:"Golos Text","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:
+    radial-gradient(90rem 50rem at 50% -18rem, #4a2a63 0%, rgba(74,42,99,0) 62%),
+    radial-gradient(60rem 40rem at 12% 110%, #2a2f6b 0%, rgba(42,47,107,0) 60%),
+    var(--ink);
+  color:var(--cream);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-inline:16px;
+  padding-block:0 56px;
+  overflow-x:hidden;
+}
+.wrap{max-width:860px;margin:0 auto}
+
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+
+/* ——— шапка ——— */
+.hero{padding-block:52px 28px;text-align:center;position:relative}
+.eyebrow{
+  font-family:var(--display);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--peach);margin:0 0 18px
+}
+h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(2.1rem,7.2vw,3.6rem);line-height:1.05;margin:0;
+  text-wrap:balance;
+  background:linear-gradient(104deg,var(--cream) 10%,var(--pink) 52%,var(--peach) 92%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lede{
+  margin:18px auto 0;max-width:34rem;color:var(--muted);font-size:1.02rem;text-wrap:pretty
+}
+.age{
+  display:block;font-family:var(--display);font-weight:800;
+  font-size:clamp(4.6rem,20vw,9rem);line-height:.86;letter-spacing:-.03em;
+  margin:6px 0 2px;color:var(--pink);
+  text-shadow:0 6px 0 #c23c7c,0 14px 34px rgba(255,111,174,.45)
+}
+
+/* ——— панель прогресса ——— */
+.status{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
+  margin:30px auto 0;max-width:30rem
+}
+.bar{flex:1 1 180px;min-width:160px;height:10px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--pink),var(--peach));transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.count{font-family:var(--display);font-size:.84rem;letter-spacing:.04em;font-variant-numeric:tabular-nums;color:var(--cream)}
+
+/* ——— сетка окошек ——— */
+.grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+  margin:34px 0 0;padding:0;list-style:none
+}
+@media (max-width:720px){.grid{grid-template-columns:repeat(5,1fr);gap:10px}}
+@media (max-width:440px){.grid{grid-template-columns:repeat(4,1fr);gap:9px}}
+.cell{
+  position:relative;aspect-ratio:1;width:100%;border:0;padding:0;cursor:pointer;
+  border-radius:12px;color:var(--cream);
+  font-family:var(--display);font-weight:600;font-size:clamp(.95rem,3.4vw,1.3rem);
+  background:linear-gradient(180deg,#43316f 0%,var(--block) 46%,#251a44 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.22),inset 0 -5px 0 rgba(0,0,0,.3),0 5px 0 #170f2c,0 10px 18px rgba(0,0,0,.35);
+  transition:transform .16s ease,box-shadow .16s ease,background .3s ease;
+}
+.cell:hover{transform:translateY(-3px);box-shadow:inset 0 2px 0 rgba(255,255,255,.28),inset 0 -5px 0 rgba(0,0,0,.3),0 8px 0 #170f2c,0 14px 22px rgba(0,0,0,.4)}
+.cell:active{transform:translateY(2px);box-shadow:inset 0 2px 0 rgba(255,255,255,.2),inset 0 -3px 0 rgba(0,0,0,.3),0 2px 0 #170f2c}
+.cell:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+.cell .n{position:relative;z-index:2}
+.cell .heart{position:absolute;inset:0;margin:auto;width:46%;height:46%;opacity:0;transform:scale(.4);transition:opacity .25s ease,transform .35s cubic-bezier(.2,1.4,.4,1)}
+.cell.open{
+  background:linear-gradient(180deg,#ff8dbe 0%,#f0538f 50%,#c43a74 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 -5px 0 rgba(0,0,0,.22),0 5px 0 #8c2552,0 10px 18px rgba(0,0,0,.35)
+}
+.cell.open .n{opacity:0;transform:scale(.5);transition:opacity .2s ease,transform .2s ease}
+.cell.open .heart{opacity:1;transform:scale(1)}
+
+.hint{margin:22px 0 0;text-align:center;color:var(--muted);font-size:.9rem}
+.linkish{
+  background:none;border:0;padding:4px 8px;margin:0;cursor:pointer;color:var(--mint);
+  font:inherit;text-decoration:underline;text-underline-offset:3px;border-radius:6px
+}
+.linkish:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+
+/* ——— финальная плашка ——— */
+.finale{
+  margin:34px 0 0;padding:30px 24px;border-radius:20px;text-align:center;
+  background:linear-gradient(170deg,rgba(255,111,174,.16),rgba(134,231,198,.1));
+  border:1px solid var(--line)
+}
+.finale h2{font-family:var(--display);font-weight:600;font-size:1.5rem;margin:0 0 12px;text-wrap:balance}
+.finale p{margin:0 auto;max-width:30rem;color:var(--cream)}
+.finale img{width:170px;margin:0 auto 6px;display:block;filter:drop-shadow(0 16px 24px rgba(0,0,0,.5))}
+
+footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
+
+/* ——— окно с пожеланием ——— */
+.overlay{
+  position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:18px;
+  background:rgba(12,8,24,.74);backdrop-filter:blur(7px)
+}
+.sheet{
+  position:relative;width:min(460px,100%);max-height:88vh;overflow:auto;
+  padding:30px 26px 26px;border-radius:22px;text-align:center;
+  background:linear-gradient(176deg,#2d2050 0%,#1d1434 100%);
+  border:1px solid var(--line);
+  box-shadow:0 30px 70px rgba(0,0,0,.6);
+  animation:pop .4s cubic-bezier(.2,1.2,.35,1)
+}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.94)}to{opacity:1;transform:none}}
+.sheet .num{
+  font-family:var(--display);font-weight:800;font-size:.78rem;letter-spacing:.2em;
+  color:var(--peach);text-transform:uppercase;margin:0 0 16px
+}
+.sheet .wish{font-size:1.18rem;line-height:1.5;margin:0;text-wrap:pretty}
+.sheet img{display:block;width:150px;margin:0 auto 14px;filter:drop-shadow(0 14px 20px rgba(0,0,0,.5))}
+.sheet .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:24px 0 0}
+.btn{
+  font-family:var(--display);font-weight:600;font-size:.86rem;cursor:pointer;
+  padding:12px 20px;border-radius:12px;border:0;color:#2b0f1f;
+  background:linear-gradient(180deg,#ffd3a6,var(--peach));
+  box-shadow:0 4px 0 #c98040;transition:transform .12s ease,box-shadow .12s ease
+}
+.btn.ghost{background:none;color:var(--cream);box-shadow:inset 0 0 0 1px var(--line)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #c98040}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #c98040}
+.btn:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+
+/* ——— музыка ——— */
+.music{
+  position:fixed;z-index:55;right:14px;top:calc(14px + env(safe-area-inset-top,0px));
+  display:flex;align-items:center;gap:8px;
+  padding:9px 14px;border-radius:99px;cursor:pointer;
+  font-family:var(--display);font-size:.72rem;letter-spacing:.06em;
+  color:var(--cream);background:rgba(45,32,80,.82);border:1px solid var(--line);
+  backdrop-filter:blur(6px)
+}
+.music:hover{border-color:rgba(255,255,255,.3)}
+.music:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+.eq{display:flex;align-items:flex-end;gap:2px;height:12px}
+.eq b{width:3px;height:4px;border-radius:1px;background:var(--mint);display:block}
+.music.on .eq b{animation:eq .9s ease-in-out infinite}
+.music.on .eq b:nth-child(2){animation-delay:.15s}
+.music.on .eq b:nth-child(3){animation-delay:.3s}
+@keyframes eq{0%,100%{height:4px}50%{height:12px}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+</head>
+<body>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<button class="music" id="music" type="button" aria-pressed="false">
+  <span class="eq" aria-hidden="true"><b></b><b></b><b></b></span><span id="musicLabel">Музыка</span>
+</button>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">3 октября · день рождения</p>
+    <h1 id="title">С днём рождения!</h1>
+    <span class="age">30</span>
+    <p class="lede">Тридцать окошек — по одному на каждый год. Открывай по порядку или тыкай куда захочется: внутри то, что хочется сказать вслух.</p>
+    <div class="status">
+      <span class="count"><span id="done">0</span> из 30</span>
+      <span class="bar"><i id="barFill"></i></span>
+    </div>
+  </header>
+
+  <main>
+    <ul class="grid" id="grid"></ul>
+    <p class="hint"><button class="linkish" id="openAll" type="button" hidden>открыть все сразу</button></p>
+    <section class="finale" id="finale" hidden>
+      <img id="finaleImg" src="s/ruffle.png" alt="">
+      <h2 id="finaleTitle">Все тридцать открыты</h2>
+      <p id="finaleText">Тридцать — хороший возраст: уже знаешь, чего не хочешь, и ещё успеваешь всё, чего хочешь. Пусть этот год будет твоим: спокойным там, где нужен покой, и громким там, где хочется громко. С днём рождения.</p>
+    </section>
+  </main>
+
+  <footer>Сделано специально ко дню рождения · 2026</footer>
+</div>
+
+<div class="overlay" id="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="sheetNum">
+  <div class="sheet" id="sheet">
+    <p class="num" id="sheetNum">Окошко 1</p>
+    <img id="sheetImg" alt="" hidden>
+    <p class="wish" id="sheetWish"></p>
+    <div class="actions">
+      <button class="btn" id="nextBtn" type="button">Следующее</button>
+      <button class="btn ghost" id="closeBtn" type="button">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* имя именинницы — подставляется в заголовок */
+var NAME = "";
+
+var WISHES = [
+  {t:"С тридцатилетием. Сегодня весь день про тебя — и это честно заслужено."},
+  {t:"Пусть этот год будет щедрым на людей, рядом с которыми не нужно притворяться."},
+  {t:"Тридцать — это возраст, когда уже точно знаешь, что тебе идёт. И носишь это, не спрашивая разрешения."},
+  {t:"Желаю утр, в которые никуда не надо спешить."},
+  {t:"Этот маленький отряд поздравляет тебя первым.", img:"s/plush.png", alt:"Minecraft-персонаж с плюшевой игрушкой"},
+  {t:"Пусть сбудется то, о чём ты никому не рассказывала."},
+  {t:"Здоровья. Самое скучное пожелание из всех и самое важное."},
+  {t:"Желаю денег ровно столько, чтобы перестать о них думать."},
+  {t:"Пусть в этом году найдётся дело, от которого загораются глаза."},
+  {t:"Коты тоже в курсе, что у тебя праздник. Просто не подают виду.", img:"s/cats.png", alt:"Два кота в пиксельном стиле"},
+  {t:"Пусть рядом будут те, кому можно написать в три часа ночи."},
+  {t:"Желаю поездки, после которой фотографии не передают и половины."},
+  {t:"Тридцать лет — это тридцать лет опыта. Серьёзная заявка."},
+  {t:"Пусть тело слушается, а спина не напоминает о себе."},
+  {t:"Желаю много таких вечеров: тепло, тихо и никуда не надо.", img:"s/pajamas.png", alt:"Minecraft-персонаж в розовой пижаме"},
+  {t:"Пусть будет время на ерунду. На самую приятную ерунду."},
+  {t:"Желаю, чтобы любимые вещи не садились после стирки."},
+  {t:"Пусть этот год принесёт мечту, которую раньше было страшно загадывать."},
+  {t:"Стиль у тебя не по возрасту, а по характеру.", img:"s/jeans.png", alt:"Minecraft-персонаж в широких джинсах"},
+  {t:"Желаю лёгкости там, где раньше было тяжело."},
+  {t:"Пусть будет кому варить кофе по утрам. И кому варят тебе."},
+  {t:"Желаю, чтобы в телефоне было больше сообщений от людей, чем от банков."},
+  {t:"Пусть будет повод наряжаться чаще, чем по праздникам.", img:"s/ruffle.png", alt:"Minecraft-персонаж в розовом костюме"},
+  {t:"Пусть будет поменьше «надо» там, где можно «хочу»."},
+  {t:"Желаю смеяться так, чтобы потом болели щёки."},
+  {t:"Пусть всё, что должно случиться, случится вовремя."},
+  {t:"Уверенность тебе к лицу.", img:"s/black.png", alt:"Minecraft-персонаж в чёрном"},
+  {t:"Желаю, чтобы тридцать первый оказался ещё лучше тридцатого."},
+  {t:"Спасибо, что ты есть. Без шуток и без повода."},
+  {t:"Последнее окошко. Пусть этот год будет твоим — целиком и полностью. С днём рождения.", img:"s/couple2.png", alt:"Два Minecraft-персонажа рядом"}
+];
+
+var KEY = "bday30.opened.v1";
+var opened = new Set();
+try{ var saved = localStorage.getItem(KEY); if(saved) JSON.parse(saved).forEach(function(i){opened.add(i)}); }catch(e){}
+
+var grid = document.getElementById("grid");
+var overlay = document.getElementById("overlay");
+var sheetNum = document.getElementById("sheetNum");
+var sheetWish = document.getElementById("sheetWish");
+var sheetImg = document.getElementById("sheetImg");
+var nextBtn = document.getElementById("nextBtn");
+var closeBtn = document.getElementById("closeBtn");
+var doneEl = document.getElementById("done");
+var barFill = document.getElementById("barFill");
+var finale = document.getElementById("finale");
+var openAllBtn = document.getElementById("openAll");
+var lastFocus = null;
+var current = -1;
+
+if(NAME){ document.getElementById("title").textContent = "С днём рождения, " + NAME + "!"; }
+
+var HEART = '<svg class="heart" viewBox="0 0 11 10" aria-hidden="true" fill="#fff">'+
+  '<rect x="1" y="1" width="2" height="1"/><rect x="3" y="0" width="2" height="1"/><rect x="6" y="0" width="2" height="1"/><rect x="8" y="1" width="2" height="1"/>'+
+  '<rect x="0" y="2" width="11" height="2"/><rect x="1" y="4" width="9" height="1"/><rect x="2" y="5" width="7" height="1"/>'+
+  '<rect x="3" y="6" width="5" height="1"/><rect x="4" y="7" width="3" height="1"/><rect x="5" y="8" width="1" height="1"/></svg>';
+
+for(var i=0;i<30;i++){
+  var li = document.createElement("li");
+  var b = document.createElement("button");
+  b.type = "button";
+  b.className = "cell";
+  b.dataset.i = i;
+  b.innerHTML = '<span class="n">'+(i+1)+'</span>'+HEART;
+  b.setAttribute("aria-label","Окошко "+(i+1));
+  li.appendChild(b);
+  grid.appendChild(li);
+}
+var cells = Array.prototype.slice.call(grid.querySelectorAll(".cell"));
+
+grid.addEventListener("click", function(e){
+  var btn = e.target.closest(".cell");
+  if(!btn) return;
+  var idx = +btn.dataset.i;
+  var fresh = !opened.has(idx);
+  openWish(idx, btn);
+  if(fresh){
+    var r = btn.getBoundingClientRect();
+    burst(r.left + r.width/2, r.top + r.height/2, 26);
+  }
+});
+
+function openWish(idx, srcEl){
+  current = idx;
+  lastFocus = srcEl || lastFocus;
+  var w = WISHES[idx];
+  sheetNum.textContent = "Окошко " + (idx+1) + " из 30";
+  sheetWish.textContent = w.t;
+  if(w.img){ sheetImg.src = w.img; sheetImg.alt = w.alt || ""; sheetImg.hidden = false; }
+  else { sheetImg.hidden = true; sheetImg.removeAttribute("src"); }
+  var nextIdx = findNext();
+  nextBtn.textContent = nextIdx === -1 ? "Готово" : "Следующее";
+  overlay.hidden = false;
+  closeBtn.focus();
+  markOpen(idx);
+}
+
+function markOpen(idx){
+  if(opened.has(idx)) return;
+  opened.add(idx);
+  cells[idx].classList.add("open");
+  cells[idx].setAttribute("aria-label","Окошко "+(idx+1)+", открыто");
+  save(); refresh();
+}
+
+function findNext(){
+  for(var k=1;k<=30;k++){
+    var j = (current + k) % 30;
+    if(!opened.has(j)) return j;
+  }
+  return -1;
+}
+
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(Array.from(opened))); }catch(e){} }
+
+function refresh(){
+  var n = opened.size;
+  doneEl.textContent = n;
+  barFill.style.width = (n/30*100) + "%";
+  openAllBtn.hidden = n < 4 || n === 30;
+  if(n === 30 && finale.hidden){
+    finale.hidden = false;
+    rain();
+  }
+}
+
+nextBtn.addEventListener("click", function(){
+  var j = findNext();
+  if(j === -1){ closeSheet(); finale.scrollIntoView({behavior:"smooth", block:"center"}); return; }
+  openWish(j, cells[j]);
+  var r = cells[j].getBoundingClientRect();
+  burst(r.left + r.width/2, r.top + r.height/2, 22);
+});
+closeBtn.addEventListener("click", closeSheet);
+overlay.addEventListener("click", function(e){ if(e.target === overlay) closeSheet(); });
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && !overlay.hidden) closeSheet();
+});
+function closeSheet(){
+  overlay.hidden = true;
+  if(lastFocus) lastFocus.focus();
+}
+
+openAllBtn.addEventListener("click", function(){
+  cells.forEach(function(c,i){ markOpen(i); });
+  rain();
+});
+
+/* ——— конфетти ——— */
+var cv = document.getElementById("confetti");
+var ctx = cv.getContext("2d");
+var parts = [];
+var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var COLORS = ["#ff6fae","#ffb673","#86e7c6","#fff4e8","#b58cff"];
+function size(){ cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+size(); addEventListener("resize", size);
+
+function burst(x, y, n){
+  if(reduce) return;
+  for(var i=0;i<n;i++){
+    parts.push({
+      x:x, y:y,
+      vx:(Math.random()-.5)*7, vy:Math.random()*-7-2,
+      s:4+Math.random()*5, r:Math.random()*Math.PI, vr:(Math.random()-.5)*.3,
+      c:COLORS[(Math.random()*COLORS.length)|0], life:0
+    });
+  }
+  run();
+}
+function rain(){
+  if(reduce) return;
+  for(var i=0;i<140;i++){
+    parts.push({
+      x:Math.random()*innerWidth, y:-20-Math.random()*innerHeight*.6,
+      vx:(Math.random()-.5)*2, vy:2+Math.random()*3,
+      s:4+Math.random()*6, r:Math.random()*Math.PI, vr:(Math.random()-.5)*.25,
+      c:COLORS[(Math.random()*COLORS.length)|0], life:0
+    });
+  }
+  run();
+}
+var raf = null;
+function run(){ if(!raf) raf = requestAnimationFrame(tick); }
+function tick(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  for(var i=parts.length-1;i>=0;i--){
+    var p = parts[i];
+    p.vy += .18; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+    if(p.y > innerHeight + 40 || p.life > 460){ parts.splice(i,1); continue; }
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r);
+    ctx.fillStyle = p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.7);
+    ctx.restore();
+  }
+  if(parts.length){ raf = requestAnimationFrame(tick); }
+  else { raf = null; ctx.clearRect(0,0,innerWidth,innerHeight); }
+}
+
+/* ——— музыка: короткая петля на Web Audio ——— */
+var musicBtn = document.getElementById("music");
+var musicLabel = document.getElementById("musicLabel");
+var actx = null, timer = null, step = 0, nextTime = 0;
+var MELODY = [0,4,7,11,7,4,  0,4,9,12,9,4,  -1,3,7,10,7,3,  -3,2,7,9,7,2];
+var BASS   = [-24,-24,-24,-24,-24,-24, -24,-24,-24,-24,-24,-24, -25,-25,-25,-25,-25,-25, -27,-27,-27,-27,-27,-27];
+function hz(semi){ return 440 * Math.pow(2, (semi - 9) / 12); }
+
+function voice(when, freq, dur, gainVal, type){
+  var o = actx.createOscillator(), g = actx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, when);
+  g.gain.exponentialRampToValueAtTime(gainVal, when + .04);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+  o.connect(g); g.connect(actx.destination);
+  o.start(when); o.stop(when + dur + .05);
+}
+function schedule(){
+  var spb = 0.34;
+  while(nextTime < actx.currentTime + 0.3){
+    var m = MELODY[step % MELODY.length];
+    voice(nextTime, hz(m + 12), 0.5, 0.09, "triangle");
+    if(step % 6 === 0) voice(nextTime, hz(BASS[step % BASS.length] + 12), 1.1, 0.07, "sine");
+    if(step % 3 === 0) voice(nextTime, hz(m + 24), 0.25, 0.025, "sine");
+    nextTime += spb; step++;
+  }
+}
+musicBtn.addEventListener("click", function(){
+  if(timer){
+    clearInterval(timer); timer = null;
+    musicBtn.classList.remove("on"); musicBtn.setAttribute("aria-pressed","false");
+    musicLabel.textContent = "Музыка";
+    return;
+  }
+  try{
+    if(!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if(actx.state === "suspended") actx.resume();
+    nextTime = actx.currentTime + 0.1;
+    schedule();
+    timer = setInterval(schedule, 120);
+    musicBtn.classList.add("on"); musicBtn.setAttribute("aria-pressed","true");
+    musicLabel.textContent = "Играет";
+  }catch(e){
+    musicLabel.textContent = "Не вышло";
+  }
+});
+
+/* восстановление прогресса */
+opened.forEach(function(i){
+  cells[i].classList.add("open");
+  cells[i].setAttribute("aria-label","Окошко "+(i+1)+", открыто");
+});
+refresh();
+</script>
+
+</body>
+</html>
