@@ -115,6 +115,37 @@ h1{
 }
 .cell.open .n{opacity:0;transform:scale(.5);transition:opacity .2s ease,transform .2s ease}
 .cell.open .heart{opacity:1;transform:scale(1)}
+/* особое окошко-ритуал: светится, пока не открыто */
+.cell.special:not(.open){
+  background:linear-gradient(180deg,#ffd3a6 0%,#ffb673 50%,#e08a3c 100%);color:#2b0f1f;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -5px 0 rgba(0,0,0,.18),0 5px 0 #a8642a,0 0 26px rgba(255,182,115,.75);
+  animation:glow 1.6s ease-in-out infinite
+}
+.cell.special:not(.open)::after{content:"✦";position:absolute;top:4px;right:7px;font-size:.7em;line-height:1}
+@keyframes glow{0%,100%{box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -5px 0 rgba(0,0,0,.18),0 5px 0 #a8642a,0 0 14px rgba(255,182,115,.45)}50%{box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -5px 0 rgba(0,0,0,.18),0 5px 0 #a8642a,0 0 34px rgba(255,182,115,.95)}}
+
+/* ритуал: прочитать вслух → загадать → задуть свечу */
+.ritual p{margin:0 0 14px}
+.ritual .say{
+  font-family:var(--display);font-weight:600;font-size:1.12rem;line-height:1.45;color:var(--cream);
+  padding:18px 16px;border-radius:16px;background:rgba(255,111,174,.12);border:1px dashed rgba(255,111,174,.5);
+  text-wrap:balance
+}
+.ritual .lead{color:var(--muted);font-size:.98rem}
+.candle{position:relative;width:64px;height:150px;margin:6px auto 16px;border:0;padding:0;background:none;cursor:pointer;display:block}
+.candle:focus-visible{outline:3px solid var(--mint);outline-offset:4px;border-radius:12px}
+.candle .stick{position:absolute;left:50%;bottom:0;width:30px;height:84px;margin-left:-15px;border-radius:6px 6px 4px 4px;
+  background:repeating-linear-gradient(135deg,#fff4e8 0 9px,#ff8dbe 9px 18px)}
+.candle .wick{position:absolute;left:50%;bottom:84px;width:2px;height:10px;margin-left:-1px;background:#3a2a20}
+.candle .flame{position:absolute;left:50%;bottom:92px;width:26px;height:42px;margin-left:-13px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;
+  background:radial-gradient(circle at 50% 70%,#fff8d6 0%,#ffd36b 35%,#ff8a3d 70%,rgba(255,90,40,0) 100%);
+  box-shadow:0 0 30px 10px rgba(255,170,70,.45);transform-origin:50% 90%;animation:flicker .18s ease-in-out infinite alternate;
+  transition:opacity .35s ease,transform .35s ease}
+@keyframes flicker{from{transform:scale(1,1) rotate(-2deg)}to{transform:scale(.94,1.06) rotate(2deg)}}
+.candle.out .flame{opacity:0;transform:scale(.2,.4) translateY(10px);animation:none}
+.candle .smoke{position:absolute;left:50%;bottom:96px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:rgba(255,255,255,.35);opacity:0}
+.candle.out .smoke{animation:smoke 1.6s ease-out forwards}
+@keyframes smoke{0%{opacity:.7;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(4)}}
 
 .hint{margin:22px 0 0;text-align:center;color:var(--muted);font-size:.9rem}
 .linkish{
@@ -292,6 +323,23 @@ footer{margin:40px 0 0;text-align:center;color:var(--muted);font-size:.82rem}
     <p class="num" id="sheetNum">Окошко 1</p>
     <img id="sheetImg" alt="" hidden>
     <p class="wish" id="sheetWish"></p>
+    <div class="ritual" id="ritual" hidden>
+      <div id="rStep1">
+        <p class="lead">Это окошко особенное. Прочитай вслух — громко, чтобы все слышали:</p>
+        <p class="say">«Мне тридцать один, и этот год — мой. Я заслуживаю всего самого лучшего — и я это получу!»</p>
+        <button class="btn" id="rRead" type="button">Прочитала вслух ✓</button>
+      </div>
+      <div id="rStep2" hidden>
+        <p class="lead">А теперь закрой глаза, загадай самое заветное желание…<br>и задуй свечу — нажми на огонёк.</p>
+        <button class="candle" id="candle" type="button" aria-label="Задуть свечу">
+          <span class="smoke"></span><span class="flame"></span><span class="wick"></span><span class="stick"></span>
+        </button>
+      </div>
+      <div id="rStep3" hidden>
+        <img src="s/couple2.png" alt="Два Minecraft-персонажа рядом">
+        <p class="wish">Желание принято ✨ Теперь оно точно сбудется. Пусть этот год будет твоим — целиком и полностью. С днём рождения!</p>
+      </div>
+    </div>
     <div class="actions">
       <button class="btn" id="nextBtn" type="button">Следующее</button>
       <button class="btn ghost" id="closeBtn" type="button">Закрыть</button>
@@ -334,7 +382,7 @@ var WISHES = [
   {t:"Желаю, чтобы тридцать второй оказался ещё лучше тридцать первого."},
   {t:"Спасибо, что ты есть. Без шуток и без повода."},
   {t:"Тридцать один — красивое число: вроде уже не новичок, а всё самое интересное только начинается."},
-  {t:"Последнее окошко. Пусть этот год будет твоим — целиком и полностью. С днём рождения.", img:"s/couple2.png", alt:"Два Minecraft-персонажа рядом"}
+  {ritual:true}
 ];
 
 var KEY = "bday31.opened.v1";
@@ -371,6 +419,7 @@ for(var i=0;i<N;i++){
   b.dataset.i = i;
   b.innerHTML = '<span class="n">'+(i+1)+'</span>'+HEART;
   b.setAttribute("aria-label","Окошко "+(i+1));
+  if(WISHES[i].ritual) b.classList.add("special");
   li.appendChild(b);
   grid.appendChild(li);
 }
@@ -393,6 +442,8 @@ function openWish(idx, srcEl){
   lastFocus = srcEl || lastFocus;
   var w = WISHES[idx];
   sheetNum.textContent = "Окошко " + (idx+1) + " из " + N;
+  if(w.ritual){ openRitual(); return; }
+  ritual.hidden = true; sheetWish.hidden = false; nextBtn.hidden = false;
   sheetWish.textContent = w.t;
   if(w.img){ sheetImg.src = w.img; sheetImg.alt = w.alt || ""; sheetImg.hidden = false; }
   else { sheetImg.hidden = true; sheetImg.removeAttribute("src"); }
@@ -403,6 +454,39 @@ function openWish(idx, srcEl){
   markOpen(idx);
 }
 
+/* окошко-ритуал: открытым считается только после того, как свеча задута */
+var ritual = document.getElementById("ritual");
+var rSteps = [document.getElementById("rStep1"), document.getElementById("rStep2"), document.getElementById("rStep3")];
+var candle = document.getElementById("candle");
+function ritualStep(n){ rSteps.forEach(function(el,i){ el.hidden = i !== n; }); }
+function openRitual(){
+  sheetWish.hidden = true; sheetImg.hidden = true; nextBtn.hidden = true;
+  candle.classList.remove("out");
+  ritual.hidden = false;
+  ritualStep(0);
+  overlay.hidden = false;
+  document.getElementById("rRead").focus();
+}
+document.getElementById("rRead").addEventListener("click", function(){
+  ritualStep(1);
+  candle.focus();
+});
+candle.addEventListener("click", function(){
+  if(candle.classList.contains("out")) return;
+  candle.classList.add("out");
+  var r = candle.getBoundingClientRect();
+  burst(r.left + r.width/2, r.top + 20, 40);
+  setTimeout(function(){
+    ritualStep(2);
+    rain();
+    var j = findNextFrom(current);
+    nextBtn.hidden = j === -1;
+    nextBtn.textContent = "Следующее";
+    closeBtn.focus();
+    markOpen(current);
+  }, 1300);
+});
+
 function markOpen(idx){
   if(opened.has(idx)) return;
   opened.add(idx);
@@ -411,6 +495,13 @@ function markOpen(idx){
   save(); refresh();
 }
 
+function findNextFrom(c){
+  for(var k=1;k<N;k++){
+    var j = (c + k) % N;
+    if(!opened.has(j)) return j;
+  }
+  return -1;
+}
 function findNext(){
   for(var k=1;k<=N;k++){
     var j = (current + k) % N;
