@@ -438,52 +438,38 @@ function tick(){
   else { raf = null; ctx.clearRect(0,0,innerWidth,innerHeight); }
 }
 
-/* ——— музыка: короткая петля на Web Audio ——— */
+/* ——— музыка: фоновый трек, стартует с первого касания страницы ——— */
 var musicBtn = document.getElementById("music");
 var musicLabel = document.getElementById("musicLabel");
-var actx = null, timer = null, step = 0, nextTime = 0;
-var MELODY = [0,4,7,11,7,4,  0,4,9,12,9,4,  -1,3,7,10,7,3,  -3,2,7,9,7,2];
-var BASS   = [-24,-24,-24,-24,-24,-24, -24,-24,-24,-24,-24,-24, -25,-25,-25,-25,-25,-25, -27,-27,-27,-27,-27,-27];
-function hz(semi){ return 440 * Math.pow(2, (semi - 9) / 12); }
+var track = new Audio("music.mp3");
+track.loop = true; track.preload = "auto"; track.volume = .75;
+var userStopped = false;
 
-function voice(when, freq, dur, gainVal, type){
-  var o = actx.createOscillator(), g = actx.createGain();
-  o.type = type; o.frequency.value = freq;
-  g.gain.setValueAtTime(0.0001, when);
-  g.gain.exponentialRampToValueAtTime(gainVal, when + .04);
-  g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
-  o.connect(g); g.connect(actx.destination);
-  o.start(when); o.stop(when + dur + .05);
+function playing(on){
+  musicBtn.classList.toggle("on", on);
+  musicBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  musicLabel.textContent = on ? "Играет" : "Музыка";
 }
-function schedule(){
-  var spb = 0.34;
-  while(nextTime < actx.currentTime + 0.3){
-    var m = MELODY[step % MELODY.length];
-    voice(nextTime, hz(m + 12), 0.5, 0.09, "triangle");
-    if(step % 6 === 0) voice(nextTime, hz(BASS[step % BASS.length] + 12), 1.1, 0.07, "sine");
-    if(step % 3 === 0) voice(nextTime, hz(m + 24), 0.25, 0.025, "sine");
-    nextTime += spb; step++;
-  }
+function startTrack(){
+  var p = track.play();
+  if(p && p.catch) p.catch(function(){ playing(false); });
 }
+track.addEventListener("playing", function(){ playing(true); });
+track.addEventListener("pause", function(){ playing(false); });
+
 musicBtn.addEventListener("click", function(){
-  if(timer){
-    clearInterval(timer); timer = null;
-    musicBtn.classList.remove("on"); musicBtn.setAttribute("aria-pressed","false");
-    musicLabel.textContent = "Музыка";
-    return;
-  }
-  try{
-    if(!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-    if(actx.state === "suspended") actx.resume();
-    nextTime = actx.currentTime + 0.1;
-    schedule();
-    timer = setInterval(schedule, 120);
-    musicBtn.classList.add("on"); musicBtn.setAttribute("aria-pressed","true");
-    musicLabel.textContent = "Играет";
-  }catch(e){
-    musicLabel.textContent = "Не вышло";
-  }
+  if(track.paused){ userStopped = false; startTrack(); }
+  else { userStopped = true; track.pause(); }
 });
+function firstTouch(e){
+  document.removeEventListener("pointerdown", firstTouch, true);
+  document.removeEventListener("keydown", firstTouch, true);
+  if(e.target.closest && e.target.closest("#music")) return;
+  if(!userStopped && track.paused) startTrack();
+}
+document.addEventListener("pointerdown", firstTouch, true);
+document.addEventListener("keydown", firstTouch, true);
+startTrack();
 
 /* восстановление прогресса */
 opened.forEach(function(i){
